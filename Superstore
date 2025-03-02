@@ -28,25 +28,25 @@ VALUES
     
 #For this project, I used SQL to query the Superstore database to get information about items sold at the store and their prices.
 
---ORDER items BY price
+#ORDER items BY price
 
 SELECT price
 FROM superstore
 ORDER BY price;
 
---SELECT the SUM of the price of all items purchased by item name 
+#SELECT the SUM of the price of all items purchased by item name 
 
 SELECT SUM(price), item_name
 FROM superstore
 GROUP BY item_name;
 
---SELECT the AVG price spent in the category Kitchen Supplies
+#SELECT the AVG price spent in the category Kitchen Supplies
  
 SELECT avg(price)
 FROM superstore
 WHERE category="Kitchen Supplies"
 
---SELECT the stock_quantity of all electronics
+#SELECT the stock_quantity of all electronics
 
 SELECT stock_quantity, item_name, 'Electronics'
 From superstore
