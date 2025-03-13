@@ -1,0 +1,97 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL) 
+
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+SELECT *
+FROM Spotifydata;
+
+#How do audio features (tempo, loudness, key, etc.) differ across top-performing and low-performing songs?
+
+SELECT
+CASE WHEN popularity >= 80 THEN 'Top-Performing'
+WHEN popularity <= 40 THEN 'Low-Performing'
+ELSE 'Mid-Performing'
+END AS performance_category,
+COUNT(*) AS total_songs,
+AVG(tempo) AS avg_tempo,
+AVG(loudness) AS avg_loudness,
+AVG(song_key) AS avg_key,
+AVG(danceability) AS avg_danceability,
+AVG(energy) AS avg_energy, 
+AVG(valence) AS avg_valence
+FROM Spotifydata
+GROUP BY performance_category;
+
+#Is there a connection between a song’s key or tempo and its popularity?
+
+SELECT song_key,
+ROUND(AVG(popularity), 2) AS avg_popularity,
+COUNT(track_id) AS total_songs
+FROM Spotifydata
+GROUP BY song_key
+ORDER BY avg_popularity DESC;
+
+SELECT 
+CASE WHEN tempo < 80 THEN 'Slow' 
+WHEN tempo BETWEEN 80 AND 120 THEN 'Moderate'
+WHEN tempo > 120 THEN 'Fast'
+END AS tempo_category,
+ROUND(AVG(popularity), 2) AS avg_popularity,
+COUNT(track_id) AS total_songs
+FROM Spotifydata
+GROUP BY tempo_category
+ORDER BY avg_popularity DESC;
+
+SELECT song_key,
+AVG(tempo) AS avg_tempo,
+AVG(popularity) AS avg_popularity
+FROM Spotifydata
+GROUP BY song_key
+ORDER BY avg_popularity DESC;
+
+#Do collaborations between artists tend to perform better than solo releases?
+
+SELECT
+CASE WHEN track_name LIKE '%feat%' OR '%with%' THEN 'Collaboration'
+ELSE 'Solo'
+END AS release_type,
+AVG(popularity) AS avg_popularity,
+COUNT(track_id) AS total_songs
+FROM Spotifydata
+GROUP BY release_type;
+
+#What types of songs (energy, tempo, mood) are most often added to user playlists?
+
+SELECT AVG(energy) AS avg_energy,
+AVG(tempo) AS avg_tempo,
+AVG(valence) AS avg_mood,
+COUNT(track_id) AS total_songs
+FROM Spotifydata
+GROUP BY valence
+ORDER BY total_songs DESC;
