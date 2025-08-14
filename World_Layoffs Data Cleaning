@@ -3,10 +3,11 @@
 SELECT *
 FROM layoffs;
 
+#For this project, I used SQL to clean the dataset focusing on: 
 -- Remove Duplicates
 -- Standardize the data
 -- Null values or blank values
--- Remove any columns or rows
+-- Remove any unnecessary columns or rows
 
 CREATE TABLE layoffs_staging
 LIKE layoffs;
